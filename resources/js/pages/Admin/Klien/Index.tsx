@@ -62,7 +62,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function AdminKlien({ klien, users, filters, userRoles = [] }: Props) {
+export default function AdminKlien({ klien, users, filters, }: Props) {
     // 1. State untuk toggle modal
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);

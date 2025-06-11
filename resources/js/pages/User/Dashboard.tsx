@@ -19,7 +19,6 @@ interface ProgressAcaraItem {
 }
 
 export default function UserDashboard() {
-    const { userRoles = [] } = usePage().props as { userRoles?: string[] };
     const { user, klien, progressPct, items } = usePage<{
         user: { name: string };
         klien: { tanggal_acara: string; lokasi: string; paket: string } | null;
