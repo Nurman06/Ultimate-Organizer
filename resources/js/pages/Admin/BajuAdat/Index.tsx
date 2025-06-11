@@ -12,6 +12,7 @@ import { Head, router, useForm } from '@inertiajs/react';
 import React, { useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { toast } from 'sonner';
+import { Inertia } from '@inertiajs/inertia';
 
 const rupiahFormatter = new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -57,13 +58,20 @@ export default function AdminBajuAdat({ bajuAdat, filters }: Props) {
         stok: 0,
     });
 
-    const editForm = useForm({
+    const editForm = useForm<{
+        id: number;
+        nama: string;
+        existingGambar: string;
+        harga: number;
+        stok: number;
+        gambar: File | null;
+    }>({
         id: 0,
         nama: '',
-        gambar: null as File | null,
         existingGambar: '',
         harga: 0,
         stok: 0,
+        gambar: null,
     });
 
     const openModal = () => setIsModalOpen(true);
@@ -117,24 +125,34 @@ export default function AdminBajuAdat({ bajuAdat, filters }: Props) {
     const submitEdit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        formData.append('nama', editForm.data.nama);
-        formData.append('harga', editForm.data.harga.toString());
-        formData.append('stok', editForm.data.stok.toString());
-        formData.append('_method', 'PUT');
+        // 1) Bangun FormData manual
+        const data = new FormData();
+        data.append('nama', editForm.data.nama);
+        data.append('harga', editForm.data.harga.toString());
+        data.append('stok', editForm.data.stok.toString());
+
+        // Tambahkan file gambar baru jika ada
         if (editForm.data.gambar) {
-            formData.append('gambar', editForm.data.gambar);
+            data.append('gambar', editForm.data.gambar);
         }
 
-        form.post(route('admin.baju-adat.store'), {
+        // Override method menjadi PUT agar laravel masuk ke update()
+        data.append('_method', 'PUT');
+
+        console.log('[ManualFormData] entries:', Array.from(data.entries()));
+
+        // 2) Kirim via Inertia.post ke route update
+        Inertia.post(route('admin.baju-adat.update', editForm.data.id), data, {
+            forceFormData: true, // optional, FormData sudah dibuat manual
+            onError: (errors) => {
+                console.error('[Manual] onError:', errors);
+                toast.error('Validasi gagal—cek console');
+            },
             onSuccess: () => {
-                toast.success('Baju adat berhasil ditambahkan');
-                closeModal();
+                console.log('[Manual] onSuccess');
+                toast.success('Baju Adat berhasil diperbarui');
+                closeEditModal();
             },
-            onError: () => {
-                toast.error('Gagal menambahkan baju adat');
-            },
-            forceFormData: true,
         });
     };
 

@@ -361,9 +361,9 @@ export default function AdminKlien({ klien, users, filters, userRoles = [] }: Pr
                                         <SelectValue placeholder="Pilih Paket" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="basic">Basic</SelectItem>
-                                        <SelectItem value="standar">Standar</SelectItem>
-                                        <SelectItem value="premium">Premium</SelectItem>
+                                        <SelectItem value="basic">Silver</SelectItem>
+                                        <SelectItem value="standar">Gold</SelectItem>
+                                        <SelectItem value="premium">Platinum</SelectItem>
                                     </SelectContent>
                                 </Select>
 

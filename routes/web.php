@@ -119,13 +119,5 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/user/jadwalkan-meeting', [MeetingController::class, 'store']);
 });
 
-// Admin routes (role:admin)
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::post('/admin/meetings/{meeting}/approve', [AdminMeetingController::class, 'approve'])
-        ->name('admin.meetings.approve');
-    Route::post('/admin/meetings/{meeting}/reject', [AdminMeetingController::class, 'reject'])
-        ->name('admin.meetings.reject');
-});
-
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
